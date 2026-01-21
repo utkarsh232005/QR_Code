@@ -21,7 +21,7 @@ This Docker image provides a simple command-line interface to generate QR codes 
 Generate a QR code for any text:
 
 ```bash
-docker run -e TEXT="Hello World" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="Hello World" -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 This creates `qr.png` in your current directory.
@@ -29,13 +29,13 @@ This creates `qr.png` in your current directory.
 ### For URLs
 
 ```bash
-docker run -e TEXT="https://github.com" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="https://github.com" -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 ### Custom Filename
 
 ```bash
-docker run -e TEXT="https://youtube.com" -e FILENAME="youtube.png" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="https://youtube.com" -e FILENAME="youtube.png" -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 ## 📋 Parameters
@@ -60,8 +60,8 @@ docker run -e TEXT="https://youtube.com" -e FILENAME="youtube.png" -v $(pwd):/ou
 ```bash
 docker run -e TEXT="WIFI:T:WPA;S:MyNetwork;P:MyPassword;;" \
   -e FILENAME="wifi.png" \
-  -v $(pwd):/output \
-  utkarsh/qr-generator
+  -v "$(pwd)":/output \
+  utkarsh2325/qr-generator
 ```
 
 ### 2. Business Card / Contact Info
@@ -74,8 +74,8 @@ TEL:+1234567890
 EMAIL:john@example.com
 END:VCARD" \
   -e FILENAME="contact.png" \
-  -v $(pwd):/output \
-  utkarsh/qr-generator
+  -v "$(pwd)":/output \
+  utkarsh2325/qr-generator
 ```
 
 ### 3. Batch Generation Script
@@ -92,7 +92,7 @@ urls=(
 
 for url in "${urls[@]}"; do
   name=$(echo $url | sed 's/https:\/\///' | sed 's/\///')
-  docker run -e TEXT="$url" -e FILENAME="${name}.png" -v $(pwd):/output utkarsh/qr-generator
+  docker run -e TEXT="$url" -e FILENAME="${name}.png" -v "$(pwd)":/output utkarsh2325/qr-generator
 done
 ```
 
@@ -100,7 +100,7 @@ done
 
 ```bash
 MY_URL="https://example.com"
-docker run -e TEXT="$MY_URL" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="$MY_URL" -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 ## 🛠️ Building Locally
@@ -109,13 +109,13 @@ docker run -e TEXT="$MY_URL" -v $(pwd):/output utkarsh/qr-generator
 
 ```bash
 cd QR_Code
-docker build -t utkarsh/qr-generator .
+docker build -t utkarsh2325/qr-generator .
 ```
 
 ### Run Local Build
 
 ```bash
-docker run -e TEXT="Test" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="Test" -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 ## 📤 Publishing to Docker Hub
@@ -124,14 +124,14 @@ docker run -e TEXT="Test" -v $(pwd):/output utkarsh/qr-generator
 
 ```bash
 # Build with version tag
-docker build -t utkarsh/qr-generator:v1.0.0 .
+docker build -t utkarsh2325/qr-generator:v1.0.0 .
 
 # Tag as latest
-docker tag utkarsh/qr-generator:v1.0.0 utkarsh/qr-generator:latest
+docker tag utkarsh2325/qr-generator:v1.0.0 utkarsh2325/qr-generator:latest
 
 # Push to Docker Hub
-docker push utkarsh/qr-generator:v1.0.0
-docker push utkarsh/qr-generator:latest
+docker push utkarsh2325/qr-generator:v1.0.0
+docker push utkarsh2325/qr-generator:latest
 ```
 
 ### Multi-Architecture Build (ARM + x86)
@@ -141,8 +141,8 @@ For Apple Silicon (M1/M2) and Intel compatibility:
 ```bash
 docker buildx create --use
 docker buildx build --platform linux/amd64,linux/arm64 \
-  -t utkarsh/qr-generator:latest \
-  -t utkarsh/qr-generator:v1.0.0 \
+  -t utkarsh2325/qr-generator:latest \
+  -t utkarsh2325/qr-generator:v1.0.0 \
   --push .
 ```
 
@@ -166,7 +166,7 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 ### Missing TEXT Variable
 
 ```bash
-docker run -v $(pwd):/output utkarsh/qr-generator
+docker run -v "$(pwd)":/output utkarsh2325/qr-generator
 ```
 
 **Output:**
@@ -174,7 +174,7 @@ docker run -v $(pwd):/output utkarsh/qr-generator
 ❌ ERROR: TEXT environment variable is required!
 
 Usage:
-  docker run -e TEXT="Your text here" -v $(pwd):/output utkarsh/qr-generator
+  docker run -e TEXT="Your text here" -v "$(pwd)":/output utkarsh2325/qr-generator
 
 Optional:
   -e FILENAME="custom.png"  (default: qr.png)
@@ -188,7 +188,7 @@ If you get permission errors with the output file:
 
 ```bash
 # Option 1: Run with current user
-docker run --user $(id -u):$(id -g) -e TEXT="Hello" -v $(pwd):/output utkarsh/qr-generator
+docker run --user $(id -u):$(id -g) -e TEXT="Hello" -v "$(pwd)":/output utkarsh2325/qr-generator
 
 # Option 2: Fix permissions after generation
 sudo chown $USER:$USER qr.png
@@ -200,10 +200,10 @@ Make sure to mount a volume:
 
 ```bash
 # ✅ Correct - mounts current directory
-docker run -e TEXT="Hello" -v $(pwd):/output utkarsh/qr-generator
+docker run -e TEXT="Hello" -v "$(pwd)":/output utkarsh2325/qr-generator
 
 # ❌ Wrong - no volume mounted (file stays in container)
-docker run -e TEXT="Hello" utkarsh/qr-generator
+docker run -e TEXT="Hello" utkarsh2325/qr-generator
 ```
 
 ## 🚀 Advanced Usage
@@ -213,7 +213,7 @@ docker run -e TEXT="Hello" utkarsh/qr-generator
 Add to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-alias qr='docker run -e TEXT="$1" -v $(pwd):/output utkarsh/qr-generator'
+alias qr='docker run -e TEXT="$1" -v "$(pwd)":/output utkarsh2325/qr-generator'
 ```
 
 Usage:
@@ -230,8 +230,8 @@ Use in GitHub Actions:
   run: |
     docker run -e TEXT="${{ secrets.DEPLOYMENT_URL }}" \
       -e FILENAME="deployment-qr.png" \
-      -v $(pwd):/output \
-      utkarsh/qr-generator
+      -v "$(pwd)":/output \
+      utkarsh2325/qr-generator
     
 - name: Upload QR Code
   uses: actions/upload-artifact@v3
@@ -274,8 +274,8 @@ MIT License - feel free to use this in your projects!
 
 ## 🔗 Links
 
-- **Docker Hub:** `https://hub.docker.com/r/utkarsh/qr-generator`
-- **GitHub:** `https://github.com/utkarsh/qr-generator`
+- **Docker Hub:** `https://hub.docker.com/r/utkarsh2325/qr-generator`
+- **GitHub:** `https://github.com/utkarsh232005/QR_Code`
 - **Issues:** Report bugs or request features
 
 ## 📊 Version History
